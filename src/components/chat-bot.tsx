@@ -17,14 +17,74 @@ const SUGGESTIONS = [
   "Tell me about Transformers"
 ];
 
-// Curated high-fidelity knowledge responses for students
-const KNOWLEDGE_BASE: Record<string, string> = {
-  cap: "The CAP Theorem states that in a distributed data store, you can only guarantee two out of three of: Consistency, Availability, and Partition Tolerance. For high-scale systems, Partition Tolerance (P) is mandatory, so you must choose between Consistency (C) and Availability (A)!",
-  ml: "Your next ML III class is 'Initialization, Normalization & Debugging' scheduled for TODAY at 11:30 AM. Don't miss it!",
-  hld: "Your SST High Level Design 101 course features 15 comprehensive lectures covering System Design 101, Load Balancing, Caching, and Database Case Studies (Netflix, Uber, Messaging Systems). Access it in Subject 3!",
-  transformer: "Transformers are neural network models that rely on self-attention mechanisms to process sequential data in parallel. They power state-of-the-art LLMs by learning context and relationships between words regardless of distance!",
-  dbms: "Your SST Advanced DBMS syllabus is covering Storage Engines, Buffer Pools, Indexing, and Query Execution/Optimization. Currently, you are scheduled for 'Index Structures_2'!",
-  genai: "Your SST GenAI Engineering track covers Prompt Engineering, RAG (Retrieval-Augmented Generation), Agent SDK, Memory Systems, Model Context Protocol (MCP), and safety guardrails!"
+// Extensive high-fidelity knowledge training base for SST Sem 4 Students
+const KNOWLEDGE_BASE = {
+  cap: "📖 **CAP Dilemma & Distributed Storage**:\n\n" +
+       "In a distributed system, you can only guarantee 2 out of 3 properties:\n" +
+       "• **Consistency (C)**: Every read receives the most recent write or an error.\n" +
+       "• **Availability (A)**: Every non-failing node returns a non-error response (without guarantee of containing the latest write).\n" +
+       "• **Partition Tolerance (P)**: The system continues to operate despite network partition/messages being dropped.\n\n" +
+       "Since physical networks will always drop packets, **P is mandatory**. You must choose between **CP** (e.g., HBase, MongoDB) or **AP** (e.g., Cassandra, DynamoDB).",
+
+  caching: "⚡ **Caching & Eviction Strategies (HLD)**:\n\n" +
+           "Caching improves latency by keeping hot data in fast memory. Key concepts:\n" +
+           "• **Eviction policies**: **LRU** (Least Recently Used) discards the least recently accessed item; **LFU** (Least Frequently Used) discards items with the lowest hit frequency.\n" +
+           "• **Write Policies**: **Write-Through** updates cache and DB simultaneously (high consistency, slow writes); **Write-Back** updates cache first, flushing to DB asynchronously (fast writes, risk of data loss).",
+
+  load_balancing: "⚖️ **Load Balancing & Consistent Hashing**:\n\n" +
+                  "• **Load Balancers** distribute incoming network traffic across multiple servers (e.g., using Round Robin, Least Connections).\n" +
+                  "• **Consistent Hashing** is a technique used in distributed systems where nodes and keys are mapped onto a circular hash ring. It ensures that when a server node is added or removed, only a minimal fraction of keys (`K/N`) are rehashed or moved, preventing cache stampedes!",
+
+  indexing: "🗂️ **Database Indexing (B+ Trees)**:\n\n" +
+             "Modern relational databases use **B+ Trees** for indexes because:\n" +
+             "• All data is stored in leaf nodes, keeping non-leaf nodes highly compact to fit entirely in memory.\n" +
+             "• Leaf nodes are linked together, enabling extremely fast sequential range scans.\n" +
+             "• Provides balanced `O(log N)` search, insert, and delete operations.",
+
+  transactions: "💾 **Transactions, ACID & Concurrency**:\n\n" +
+                "A database transaction must uphold **ACID** properties:\n" +
+                "• **Atomicity**: All operations succeed or all fail.\n" +
+                "• **Consistency**: Database state moves only between valid states.\n" +
+                "• **Isolation**: Concurrent transactions do not interfere.\n" +
+                "• **Durability**: Committed changes survive system failures (guaranteed using **WAL - Write-Ahead Logging**).",
+
+  rag: "🔍 **Retrieval-Augmented Generation (RAG)**:\n\n" +
+       "RAG connects LLMs to external, private datasets by:\n" +
+       "1. **Chunking**: Splitting documents into smaller, meaningful texts.\n" +
+       "2. **Embedding**: Converting text chunks into high-dimensional vectors.\n" +
+       "3. **Vector Database**: Storing embeddings for fast retrieval.\n" +
+       "4. **Retrieval**: Finding the top-k most semantically similar chunks based on user query and injecting them into the LLM prompt.",
+
+  agent: "🤖 **AI Agents & Orchestration (LangGraph & SDK)**:\n\n" +
+         "• **AI Agents** can reason, plan, and call tools autonomously using feedback loops.\n" +
+         "• **LangGraph** introduces stateful, multi-agent orchestration by defining agents as nodes and transitions as edges on a cyclic graph, allowing complex stateful loops.\n" +
+         "• **Agent SDK** standardizes agent creation, thread tracing, and memory management.",
+
+  backprop: "📐 **Backpropagation & Computational Graphs**:\n\n" +
+            "Backpropagation is the backbone of neural network training. It uses the **Chain Rule of Calculus** to calculate the partial derivatives of the loss function with respect to every weight in the network, moving backward from the final output layer to the input. This gradient is then used by optimizers (like SGD or Adam) to update weights and minimize loss.",
+
+  cnn: "👁️ **Convolutions & CNNs (ML III)**:\n\n" +
+       "Convolutional Neural Networks extract features from grid-structured data (like images) using:\n" +
+       "• **Kernels/Filters**: Slide across the image to detect edges, shapes, and textures.\n" +
+       "• **Stride**: The step size the filter moves.\n" +
+       "• **Pooling**: Reduces spatial dimensions (e.g., Max Pooling selects the most active feature), offering translation invariance.",
+
+  transformer: "🧠 **Transformers & Self-Attention**:\n\n" +
+               "Transformers replaced traditional RNNs/LSTMs in sequence modeling by processing sequences in parallel. Key engine:\n" +
+               "• **Self-Attention**: Computes dynamic scores between all tokens using **Query (Q), Key (K), and Value (V)** vectors.\n" +
+               "• **Multi-Head Attention**: Runs multiple attention heads in parallel to capture various semantic relationships.\n" +
+               "• **Positional Encodings**: Injects order information since there are no recurrence steps.",
+
+  syllabus: "📅 **Active Sem 4 Syllabuses**:\n\n" +
+             "• **Subject 1 (DBMS)**: Advanced DBMS (Architecture, Buffer Pools, Indexing, Transactions, distributed DBs).\n" +
+             "• **Subject 2 (GenAI)**: GenAI Engineering (Prompting, RAG, LangGraph, Agent SDK, Memory, MCP, Scaling).\n" +
+             "• **Subject 3 (HLD)**: System Design (Hashing, Caching, CAP, SQL vs NoSQL, Netflix/Uber Case Studies).\n" +
+             "• **Subject 4 (ML III)**: Neural Networks (Perceptron, Backprop, Regularization, CNNs, Transformers).",
+
+  case_study: "🏗️ **High-Scale Case Studies (HLD)**:\n\n" +
+              "• **Netflix**: Relies on hybrid cloud (AWS + Open Connect CDN), microservices, active-active multi-region replication, and heavy edge-caching.\n" +
+              "• **Uber**: Uses geospatial indexing (H3 hexagon grid), consistent hashing for rider-driver matching, dynamic surge pricing algorithms, and distributed message queues.\n" +
+              "• **Facebook Newsfeed**: Employs fan-out-on-write or fan-out-on-read hybrid patterns, heavy memcached clusters, and graph databases."
 };
 
 export function ChatBot() {
@@ -67,19 +127,32 @@ export function ChatBot() {
       let replyText = "I'm looking into that for you! That topic is covered in your Sem 4 curriculum. Let me know if you want me to summarize your active syllabus or provide tips on distributed systems!";
       
       const normalizedText = text.toLowerCase();
-      if (normalizedText.includes("cap") || normalizedText.includes("consistency")) {
+      
+      if (normalizedText.includes("cap") || normalizedText.includes("consistency") || normalizedText.includes("partition")) {
         replyText = KNOWLEDGE_BASE.cap;
-      } else if (normalizedText.includes("ml") || normalizedText.includes("machine learning") || normalizedText.includes("neural")) {
-        replyText = KNOWLEDGE_BASE.ml;
-      } else if (normalizedText.includes("hld") || normalizedText.includes("design") || normalizedText.includes("high level")) {
-        replyText = KNOWLEDGE_BASE.hld;
-      } else if (normalizedText.includes("transformer") || normalizedText.includes("attention")) {
+      } else if (normalizedText.includes("cache") || normalizedText.includes("caching") || normalizedText.includes("lru") || normalizedText.includes("lfu")) {
+        replyText = KNOWLEDGE_BASE.caching;
+      } else if (normalizedText.includes("load balance") || normalizedText.includes("load balancing") || normalizedText.includes("hash") || normalizedText.includes("hashing")) {
+        replyText = KNOWLEDGE_BASE.load_balancing;
+      } else if (normalizedText.includes("index") || normalizedText.includes("indexing") || normalizedText.includes("b+") || normalizedText.includes("tree")) {
+        replyText = KNOWLEDGE_BASE.indexing;
+      } else if (normalizedText.includes("transaction") || normalizedText.includes("acid") || normalizedText.includes("concurrency") || normalizedText.includes("wal")) {
+        replyText = KNOWLEDGE_BASE.transactions;
+      } else if (normalizedText.includes("rag") || normalizedText.includes("retrieval") || normalizedText.includes("embedding") || normalizedText.includes("chunk")) {
+        replyText = KNOWLEDGE_BASE.rag;
+      } else if (normalizedText.includes("agent") || normalizedText.includes("langgraph") || normalizedText.includes("sdk")) {
+        replyText = KNOWLEDGE_BASE.agent;
+      } else if (normalizedText.includes("backprop") || normalizedText.includes("backpropagation") || normalizedText.includes("derivative") || normalizedText.includes("chain rule")) {
+        replyText = KNOWLEDGE_BASE.backprop;
+      } else if (normalizedText.includes("cnn") || normalizedText.includes("convolution") || normalizedText.includes("filter") || normalizedText.includes("pooling")) {
+        replyText = KNOWLEDGE_BASE.cnn;
+      } else if (normalizedText.includes("transformer") || normalizedText.includes("attention") || normalizedText.includes("self-attention")) {
         replyText = KNOWLEDGE_BASE.transformer;
-      } else if (normalizedText.includes("dbms") || normalizedText.includes("database") || normalizedText.includes("sql")) {
-        replyText = KNOWLEDGE_BASE.dbms;
-      } else if (normalizedText.includes("genai") || normalizedText.includes("agent") || normalizedText.includes("rag")) {
-        replyText = KNOWLEDGE_BASE.genai;
-      } else if (normalizedText.includes("hi") || normalizedText.includes("hello") || normalizedText.includes("hey")) {
+      } else if (normalizedText.includes("syllabus") || normalizedText.includes("curriculum") || normalizedText.includes("class") || normalizedText.includes("subject") || normalizedText.includes("schedule")) {
+        replyText = KNOWLEDGE_BASE.syllabus;
+      } else if (normalizedText.includes("case study") || normalizedText.includes("netflix") || normalizedText.includes("uber") || normalizedText.includes("facebook") || normalizedText.includes("design")) {
+        replyText = KNOWLEDGE_BASE.case_study;
+      } else if (normalizedText.includes("hi") || normalizedText.includes("hello") || normalizedText.includes("hey") || normalizedText.includes("online")) {
         replyText = "Hello! 👋 Ready to smash your SST Sem 4 preparation? Choose one of the quick suggestions below or ask me any question about your curriculum!";
       }
 
