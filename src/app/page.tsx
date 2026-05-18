@@ -1,21 +1,13 @@
-import { SignOut } from "@/components/sign-out";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { DashboardClient } from "@/components/dashboard-client";
 
-const Page = async () => {
+export default async function Page(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const session = await auth();
   if (!session) redirect("/sign-in");
 
-  return (
-    <>
-      <div className="bg-gray-100 rounded-lg p-4 text-center mb-6">
-        <p className="text-gray-600">Signed in as:</p>
-        <p className="font-medium">{session.user?.email}</p>
-      </div>
+  const searchParams = await props.searchParams;
+  const activeSubjectId = (searchParams?.subject as string) || "1";
 
-      <SignOut />
-    </>
-  );
-};
-
-export default Page;
+  return <DashboardClient initialActiveSubjectId={activeSubjectId} />;
+}
