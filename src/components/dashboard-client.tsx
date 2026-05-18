@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Menu, Search, ChevronDown, ChevronRight, X } from "lucide-react";
 import Link from "next/link";
 import { SignOut } from "@/components/sign-out";
+import { ChatBot } from "@/components/chat-bot";
 
 interface ClassItem {
   date: string;
@@ -336,6 +337,9 @@ export function DashboardClient({ initialActiveSubjectId }: { initialActiveSubje
 
       </main>
       </div>
+
+      {/* Premium Companion Chat Bot */}
+      <ChatBot />
     </div>
   );
 }
