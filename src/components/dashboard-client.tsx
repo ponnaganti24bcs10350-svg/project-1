@@ -27,6 +27,12 @@ export function DashboardClient({ initialActiveSubjectId }: { initialActiveSubje
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const toTopicSlug = (title: string) =>
+    title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
   const subjectsData: Record<string, Subject> = {
     "1": {
       tag: "SUBJECT - 1",
@@ -278,7 +284,7 @@ export function DashboardClient({ initialActiveSubjectId }: { initialActiveSubje
             {filteredClasses.length === 0 ? (
               <div className="py-16 text-center border border-dashed border-slate-200 rounded-xl bg-[#f8fbff]/50 px-6">
                 <Search className="mx-auto text-slate-300 mb-3" size={28} />
-                <p className="text-sm font-bold text-slate-500">No classes match "{searchQuery}"</p>
+                <p className="text-sm font-bold text-slate-500">No classes match &quot;{searchQuery}&quot;</p>
                 <button 
                   onClick={() => setSearchQuery("")} 
                   className="mt-2 text-xs font-bold text-blue-500 hover:text-blue-600 underline"
@@ -288,7 +294,11 @@ export function DashboardClient({ initialActiveSubjectId }: { initialActiveSubje
               </div>
             ) : (
               filteredClasses.map((cls, index) => (
-                <div key={index} className="flex items-center relative pl-16 pr-4 border-b border-slate-100 hover:bg-slate-50/50 group transition-colors cursor-pointer last:border-0 min-h-[72px]">
+                <Link
+                  key={index}
+                  href={`/topic/${activeSubjectId}/${toTopicSlug(cls.title)}`}
+                  className="flex items-center relative pl-16 pr-4 border-b border-slate-100 hover:bg-slate-50/50 group transition-colors cursor-pointer last:border-0 min-h-[72px]"
+                >
                   
                   {/* Timeline vertical line segment */}
                   <div className="absolute left-[36px] top-0 bottom-0 w-[1px] bg-slate-200"></div>
@@ -327,7 +337,7 @@ export function DashboardClient({ initialActiveSubjectId }: { initialActiveSubje
                   </div>
 
                   <ChevronRight size={16} className="text-blue-400 group-hover:text-blue-600 transition-colors" />
-                </div>
+                </Link>
               ))
             )}
             
